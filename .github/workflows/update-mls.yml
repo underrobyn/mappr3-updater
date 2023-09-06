@@ -3,6 +3,9 @@ name: Hourly Update
 on:
   schedule:
     - cron: '0 * * * *'
+  push:
+    branches:
+      - main
 
 jobs:
   download_and_extract:
