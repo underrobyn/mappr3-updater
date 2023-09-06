@@ -2,7 +2,7 @@ name: Hourly Update
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '15 * * * *'
   push:
     branches:
       - main
@@ -17,13 +17,16 @@ jobs:
 
     - name: Download and Extract
       run: |
-        URL="https://d2koia3g127518.cloudfront.net/export/MLS-diff-cell-export-$(date -u "+\%Y-\%m-\%dT\%H0000").csv.gz"
+        FILE_NAME="MLS-diff-cell-export-$(date -u "+%Y-%m-%dT%H0000").csv.gz"
+        echo $FILE_NAME
+        URL="https://d2koia3g127518.cloudfront.net/export/$FILE_NAME"
         echo $URL
         DESTINATION_DIR="/tmp/mlsexport"
         pwd
         mkdir -p "$DESTINATION_DIR"
-        curl -L "$URL" -o "$DESTINATION_DIR/file.csv.gz"
-        gunzip "$DESTINATION_DIR/file.csv.gz"
+        curl -L "$URL" -o "$DESTINATION_DIR/diff.csv.gz"
+        echo $(file "$DESTINATION_DIR/diff.csv.gz")
+        gunzip "$DESTINATION_DIR/diff.csv.gz"
         ls -Fail $DESTINATION_DIR
       env:
         TZ: UTC
